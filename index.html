@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Scan</title>
+    <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">
+    <meta name="mobile-web-app-capable" content="yes">
+    <script type="text/javascript" src="instascan.min.js"></script>
+    <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      color: #fff;
+      font-family:monospace;
+    }
+    #preview {
+      width: 100%;
+
+    }
+    #output div {
+
+      padding: 15px 5px;
+    }
+    #wrap {
+      position: relative;
+
+
+    }
+    #wrap::before {
+      position: absolute;
+      content: "";
+      width: 50%;
+      height: 0;
+      padding-bottom: 50%;
+      background: transparent;
+      border: rgba(255, 255, 255, 0.6) 6px dashed;
+      box-sizing: border-box;
+      border-radius: 40px;
+      display: block;
+      left: 50%;
+      top: 50%;
+      z-index: 5;
+      transform: translate(-50%, -50%);
+
+    }
+    #main {
+      max-width: 450px;
+      margin: auto;
+    }
+
+    </style>
+  </head>
+  <body>
+    <div id="main">
+      <div id="wrap">
+        <video id="preview"></video>
+      </div>
+      <div id="output"></div>
+    </div>
+    <script type="text/javascript">
+      let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+      scanner.addListener('scan', function (content) {
+
+        let p = document.createElement("div");
+        p.innerHTML = content;
+        document.getElementById("output").appendChild(p)
+
+
+      });
+      Instascan.Camera.getCameras().then(function (cameras) {
+        if (cameras.length > 0) {
+          scanner.start(cameras[0]);
+        } else {
+          console.error('No cameras found.');
+        }
+      }).catch(function (e) {
+        console.error(e);
+      });
+    </script>
+  </body>
+</html>
